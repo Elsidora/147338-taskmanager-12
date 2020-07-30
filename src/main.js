@@ -2,6 +2,7 @@
 const TASK_COUNT = 3;
 const siteMainElement = document.querySelector(`.main`);
 const siteMainControlElement = siteMainElement.querySelector(`.main__control`);
+const boardElement = siteMainElement.querySelector(`.board`);
 
 const createSiteMenuTemplate = () => {
   return (
@@ -111,6 +112,16 @@ const createSortingTemplate = () => {
       <div class="board__tasks"></div>
     </section>`
   );
+};
+
+const getBoardContainer = () => {
+  const boardElement = siteMainElement.querySelector(`.board`);
+  return boardElement;
+};
+
+const getBoardTaskContainer = () => {
+  const boardTasksElement = getBoardContainer().querySelector(`.board__tasks`);
+  return boardTasksElement;
 };
 
 const createFormEditTaskTemplate = () => {
@@ -368,23 +379,20 @@ const createButtonLoadingTemplate = () => {
   );
 };
 
-const render = (container, template, place) => {
+const renderHtmlElement = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(siteMainControlElement, createSiteMenuTemplate(), `beforeend`); // beforeend вставляет последним дочерним элементом контейнера
+renderHtmlElement(siteMainControlElement, createSiteMenuTemplate(), `beforeend`); // beforeend вставляет последним дочерним элементом контейнера
 
-render(siteMainElement, createFilterTemplate(), `beforeend`);
-render(siteMainElement, createSortingTemplate(), `beforeend`);
+renderHtmlElement(siteMainElement, createFilterTemplate(), `beforeend`);
+renderHtmlElement(siteMainElement, createSortingTemplate(), `beforeend`);
 
-const boardElement = siteMainElement.querySelector(`.board`);
-const boardTasksElement = boardElement.querySelector(`.board__tasks`);
-
-render(boardTasksElement, createFormEditTaskTemplate(), `beforeend`);
+renderHtmlElement(getBoardTaskContainer(), createFormEditTaskTemplate(), `beforeend`);
 
 for (let i = 0; i < TASK_COUNT; i += 1) {
-  render(boardTasksElement, createCardTaskTemplate(), `beforeend`);
+  renderHtmlElement(getBoardTaskContainer(), createCardTaskTemplate(), `beforeend`);
 }
 
-render(boardElement, createButtonLoadingTemplate(), `beforeend`);
+renderHtmlElement(getBoardContainer(), createButtonLoadingTemplate(), `beforeend`);
 
