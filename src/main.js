@@ -6,12 +6,12 @@ const siteMainControlElement = siteMainElement.querySelector(`.main__control`);
 const createSiteMenuTemplate = () => {
   return (
     `<section class="control__btn-wrap">
-    <input
-      type="radio"
-      name="control"
-      id="control__new-task"
-      class="control__input visually-hidden"
-    />
+      <input
+        type="radio"
+        name="control"
+        id="control__new-task"
+        class="control__input visually-hidden"
+      />
     <label for="control__new-task" class="control__label control__label--new-task"
       >+ ADD NEW TASK</label
     >
