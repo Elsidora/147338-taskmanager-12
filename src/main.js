@@ -4,17 +4,26 @@ import {createFormEditTaskTemplate} from "./view/form-edit.js";
 import {createCardTaskTemplate} from "./view/card.js";
 
 import {createSortingTemplate} from "./view/sorting.js";
-import {renderHtmlElement} from "./view/render.js";
-import {renderBoardElement} from "./view/board.js";
+import {renderHtmlElement} from "./util.js";
 import {createButtonLoadingTemplate} from "./view/button-load.js";
 
 const TASK_COUNT = 3;
 const siteMainElement = document.querySelector(`.main`);
 const siteMainControlElement = siteMainElement.querySelector(`.main__control`);
 
-renderHtmlElement(siteMainControlElement, createSiteMenuTemplate(), `beforeend`); // beforeend вставляет последним дочерним элементом контейнера
+const renderBoardElement = () => {
+  const boardElement = siteMainElement.querySelector(`.board`);
+  const boardTasksElement = boardElement.querySelector(`.board__tasks`);
+  renderHtmlElement(boardTasksElement, createFormEditTaskTemplate(), `beforeend`);
 
+  for (let i = 0; i < TASK_COUNT; i += 1) {
+    renderHtmlElement(boardTasksElement, createCardTaskTemplate(), `beforeend`);
+  }
+
+  renderHtmlElement(boardElement, createButtonLoadingTemplate(), `beforeend`);
+};
+
+renderHtmlElement(siteMainControlElement, createSiteMenuTemplate(), `beforeend`); // beforeend вставляет последним дочерним элементом контейнера
 renderHtmlElement(siteMainElement, createFilterTemplate(), `beforeend`);
 renderHtmlElement(siteMainElement, createSortingTemplate(), `beforeend`);
-
-renderBoardElement(TASK_COUNT, siteMainElement, renderHtmlElement, createFormEditTaskTemplate, createCardTaskTemplate, createButtonLoadingTemplate);
+renderBoardElement();
