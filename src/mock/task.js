@@ -72,7 +72,22 @@ const generateRepeating = () => {
 
 export const generateTask = () => {
   const dueDate = generateDate();
-  const repeating = generateRepeating();
+
+  // По заданию задача с дедлайном не может быть повторяющейся, таким знаниям
+  // самое место в данных, и никак не в шаблоне:
+  // - Опишем условие, что если дата отсутствует, т.е. задача не с дедлайном, то нужно генерировать дни повторения
+  // - В противном случае - не нужно, все дни false
+  const repeating = dueDate === null
+    ? generateRepeating()
+    : {
+      mo: false,
+      tu: false,
+      we: false,
+      th: false,
+      fr: false,
+      sa: false,
+      su: false
+    };
   return {
     description: generateDescription(),
     dueDate,
