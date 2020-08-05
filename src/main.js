@@ -6,8 +6,12 @@ import {createCardTaskTemplate} from "./view/card.js";
 import {createSortingTemplate} from "./view/sorting.js";
 import {renderHtmlElement} from "./util.js";
 import {createButtonLoadingTemplate} from "./view/button-load.js";
+import {generateTask} from "./mock/task.js";
+
 
 const TASK_COUNT = 3;
+
+const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 const siteMainElement = document.querySelector(`.main`);
 const siteMainControlElement = siteMainElement.querySelector(`.main__control`);
 
@@ -17,7 +21,7 @@ const renderBoardElement = () => {
   renderHtmlElement(boardTasksElement, createFormEditTaskTemplate(), `beforeend`);
 
   for (let i = 0; i < TASK_COUNT; i += 1) {
-    renderHtmlElement(boardTasksElement, createCardTaskTemplate(), `beforeend`);
+    renderHtmlElement(boardTasksElement, createCardTaskTemplate(tasks[i]), `beforeend`);
   }
 
   renderHtmlElement(boardElement, createButtonLoadingTemplate(), `beforeend`);
