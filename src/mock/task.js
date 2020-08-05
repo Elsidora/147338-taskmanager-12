@@ -51,21 +51,33 @@ const generateDate = () => {
   return new Date(currentDate);
 };
 
+// - Опишем функцию для генерации дней повторения
+// - Дни повторения будем выбирать случайно из двух - среды и пятницы
+
+// N.B. Если рандомизировать абсолютно все дни, такие данные не будут
+// похожи на реальные, потому что из семи случайных булевых значений почти каждый раз
+// будет хоть одно истинное, а значит почти все задачи будут повторяющимися
+
+const generateRepeating = () => {
+  return {
+    mo: false,
+    tu: false,
+    we: Boolean(getRandomInteger(0, 1)),
+    th: false,
+    fr: Boolean(getRandomInteger(0, 1)),
+    sa: false,
+    su: false
+  };
+};
+
 export const generateTask = () => {
   const dueDate = generateDate();
+  const repeating = generateRepeating();
   return {
     description: generateDescription(),
     dueDate,
     isRepeat: false,
-    repeating: {
-      mo: false,
-      tu: false,
-      we: false,
-      th: false,
-      fr: false,
-      sa: false,
-      su: false
-    },
+    repeating,
     color: `black`,
     isArchive: false,
     isFavorite: false,
