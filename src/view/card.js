@@ -1,6 +1,19 @@
-export const createCardTaskTemplate = () => {
-  return (
-    `<article class="card card--black">
+// 3.7 Обучаем шаблон задачи принимать данные
+
+// Вместо статичных данных в шаблоне выводим моковые данные. Начинаем с простых:
+// - Цвет карточки
+// - Описание
+// - Дата. Используем встроенный метод toLocaleString объекта Date для вывода дедлайна в человеческом формате
+// - По заданию дата может отсутствовать, учтём это
+
+export const createTaskTemplate = (task) => {
+  const {color, description, dueDate} = task;
+
+  const date = dueDate !== null
+    ? dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`})
+    : ``;
+
+  return `<article class="card card--${color}">
     <div class="card__form">
       <div class="card__inner">
         <div class="card__control">
@@ -25,7 +38,7 @@ export const createCardTaskTemplate = () => {
         </div>
 
         <div class="card__textarea-wrap">
-          <p class="card__text">Example task with default color.</p>
+          <p class="card__text">${description}</p>
         </div>
 
         <div class="card__settings">
@@ -33,7 +46,7 @@ export const createCardTaskTemplate = () => {
             <div class="card__dates">
               <div class="card__date-deadline">
                 <p class="card__input-deadline-wrap">
-                  <span class="card__date">23 September</span>
+                  <span class="card__date">${date}</span>
                 </p>
               </div>
             </div>
