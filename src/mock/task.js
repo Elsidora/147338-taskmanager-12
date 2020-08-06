@@ -1,11 +1,5 @@
-// Функция генерации случайного числа из диапазона
-
-const getRandomInteger = (a = 0, b = 1) => {
-  const min = Math.ceil(Math.min(a, b));
-  const max = Math.floor(Math.max(a, b));
-
-  return Math.floor(min + Math.random() * (max - min + 1));
-};
+import {COLORS} from "../const.js";
+import {getRandomInteger} from "../util.js";
 
 const generateDescription = () => {
   const descriptions = [
@@ -71,10 +65,8 @@ const generateRepeating = () => {
 };
 
 const getRandomColor = () => {
-  const colors = [`black`, `yellow`, `blue`, `green`, `pink`];
-  const randomIndex = getRandomInteger(0, colors.length - 1);
-
-  return colors[randomIndex];
+  const randomIndex = getRandomInteger(0, COLORS.length - 1);
+  return COLORS[randomIndex];
 };
 
 export const generateTask = () => {

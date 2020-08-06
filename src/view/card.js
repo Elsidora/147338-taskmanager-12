@@ -15,43 +15,25 @@
 
 // - Опишем функцию, которая будет проверять, просрочена ли задача
 // - Используем её для добавления класса-модификатора
-
-// Функция, проверяющая, просрочена ли задача
-const isExpired = (dueDate) => {
-  if (dueDate === null) {
-    return false;
-  }
-
-  let currentDate = new Date();
-  currentDate.setHours(23, 59, 59, 999);
-  currentDate = new Date(currentDate);
-
-  return currentDate.getTime() > dueDate.getTime(); // Метод getTime() возвращает числовое
-  // значение, соответствующее указанной дате по всемирному координированному времени. Значение,
-  // возвращённое методом getTime(), является количеством миллисекунд, прошедших с 1 января 1970 года 00:00:00 по UTC.
-};
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../util";
 
 // 3.9 Описываем остальную логику отображения
 
 // По аналогии с датой пишем код, который будет добавлять класс-модификатор повторяющейся задаче,
 // а также выделять кнопки "Архив" и "В избранное" в соответствии с флагами в данных
 
-const isRepeating = (repeating) => {
-  return Object.values(repeating).some(Boolean); // Метод some() проверяет, удовлетворяет ли какой-либо (хотя бы один) элемент массива условию, заданному в передаваемой функции.
-};
-
 export const createCardTaskTemplate = (task) => {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
 
   const date = dueDate !== null
-    ? dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`})
+    ? humanizeTaskDueDate(dueDate)
     : ``; // `numeric` - представление нумерации дней без нуля впереди, `long` - полное название месяца
 
-  const deadlineClassName = isExpired(dueDate)
+  const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
     : ``;
 
-  const repeatClassName = isRepeating(repeating)
+  const repeatClassName = isTaskRepeating(repeating)
     ? `card--repeat`
     : ``;
 
