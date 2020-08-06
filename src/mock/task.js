@@ -11,7 +11,7 @@ const generateDescription = () => {
   const descriptions = [
     `Изучить теорию`,
     `Сделать домашку`,
-    `завершить успешно проект`
+    `Завершить успешно проект`
   ];
 
   const randomIndex = getRandomInteger(0, descriptions.length - 1);
