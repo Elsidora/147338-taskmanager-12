@@ -15,7 +15,7 @@
 
 // - Опишем функцию, которая будет проверять, просрочена ли задача
 // - Используем её для добавления класса-модификатора
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../util";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../util.js";
 
 // 3.9 Описываем остальную логику отображения
 

@@ -90,7 +90,7 @@ export const generateTask = () => {
   return {
     description: generateDescription(),
     dueDate,
-    isRepeat: Boolean(getRandomInteger(0, 1)),
+    // isRepeat: Boolean(getRandomInteger(0, 1)),
     repeating,
     color: getRandomColor(),
     isArchive: Boolean(getRandomInteger(0, 1)),
