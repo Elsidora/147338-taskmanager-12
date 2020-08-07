@@ -22,22 +22,31 @@ const siteMainControlElement = siteMainElement.querySelector(`.main__control`);
 const renderBoardElement = () => {
   const boardElement = siteMainElement.querySelector(`.board`);
   const boardTasksElement = boardElement.querySelector(`.board__tasks`);
-  renderHtmlElement(boardTasksElement, createFormEditTaskTemplate(), `beforeend`);
+  renderHtmlElement(boardTasksElement, createFormEditTaskTemplate(tasks[0]), `beforeend`);
 
-  for (let i = 1; i < TASK_COUNT; i += 1) {
-    renderHtmlElement(boardTasksElement, createCardTaskTemplate(tasks[0]), `beforeend`);
+  for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i += 1) {
+    renderHtmlElement(boardTasksElement, createCardTaskTemplate(tasks[i]), `beforeend`);
   }
 
   // renderHtmlElement(boardElement, createButtonLoadingTemplate(), `beforeend`);
 
   if (tasks.length > TASK_COUNT_PER_STEP) {
+    let renderedTaskCount = TASK_COUNT_PER_STEP;
     renderHtmlElement(boardElement, createButtonLoadingTemplate(), `beforeend`);
 
     const loadMoreButton = boardElement.querySelector(`.load-more`);
 
     loadMoreButton.addEventListener(`click`, (evt) => {
       evt.preventDefault();
-      alert('Works!');
+      tasks
+      .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
+      .forEach((task) => renderHtmlElement(boardTasksElement, createCardTaskTemplate(task), `beforeend`));
+
+      renderedTaskCount += TASK_COUNT_PER_STEP;
+
+      if (renderedTaskCount >= tasks.length) {
+        loadMoreButton.remove();
+      }
     });
   }
 
