@@ -35,8 +35,7 @@ const renderBoardElement = () => {
     renderHtmlElement(boardElement, createButtonLoadingTemplate(), `beforeend`);
 
     const loadMoreButton = boardElement.querySelector(`.load-more`);
-
-    loadMoreButton.addEventListener(`click`, (evt) => {
+    const onLoadMoreButtonClick = (evt) => {
       evt.preventDefault();
       tasks
       .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
@@ -47,7 +46,9 @@ const renderBoardElement = () => {
       if (renderedTaskCount >= tasks.length) {
         loadMoreButton.remove();
       }
-    });
+    };
+
+    loadMoreButton.addEventListener(`click`, onLoadMoreButtonClick);
   }
 
 };
