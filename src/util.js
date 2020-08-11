@@ -5,11 +5,13 @@ export const renderHtmlElement = (container, markupString, position) => {
 // Функция генерации случайного числа из диапазона
 
 export const getRandomInteger = (a = 0, b = 1) => {
-  const min = Math.ceil(Math.min(a, b));
-  const max = Math.floor(Math.max(a, b));
+  const min = Math.min(a, b);
+  const max = Math.max(a, b);
 
   return Math.floor(min + Math.random() * (max - min + 1));
 };
+
+export const getRandomBoolean = () => Math.random() >= 0.5;
 
 const getCurrentDate = () => {
   const currentDate = new Date();
@@ -41,7 +43,7 @@ export const isTaskExpiringToday = (dueDate) => {
 
 
 export const isTaskRepeating = (repeating) => {
-  return Object.values(repeating).some(Boolean);
+  return Object.values(repeating).some((it) => it);
 };
 
 export const humanizeTaskDueDate = (dueDate) => {

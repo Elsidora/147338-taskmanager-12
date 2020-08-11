@@ -1,16 +1,13 @@
 import {COLORS} from "../const.js";
+import {DESCRIPTIONS} from "../const.js";
 import {getRandomInteger} from "../util.js";
+import {getRandomBoolean} from "../util.js";
 
 const generateDescription = () => {
-  const descriptions = [
-    `Изучить теорию`,
-    `Сделать домашку`,
-    `Завершить успешно проект`
-  ];
 
-  const randomIndex = getRandomInteger(0, descriptions.length - 1);
+  const randomIndex = getRandomInteger(0, DESCRIPTIONS.length - 1);
 
-  return descriptions[randomIndex];
+  return DESCRIPTIONS[randomIndex];
 };
 
 // - Опишем функцию для генерации даты. По заданию это либо null, либо дата плюс-минус неделя от текущей
@@ -20,8 +17,7 @@ const generateDescription = () => {
 const generateDate = () => {
   // Ноль - ложь, один - истина. Для верности приводим
   // к булевому типу с помощью Boolean
-  const isDate = Boolean(getRandomInteger(0, 1));
-
+  const isDate = getRandomBoolean();
   if (!isDate) {
     return null;
   }
@@ -56,9 +52,9 @@ const generateRepeating = () => {
   return {
     mo: false,
     tu: false,
-    we: Boolean(getRandomInteger(0, 1)),
+    we: getRandomBoolean(),
     th: false,
-    fr: Boolean(getRandomInteger(0, 1)),
+    fr: getRandomBoolean(),
     sa: false,
     su: false
   };
@@ -90,10 +86,9 @@ export const generateTask = () => {
   return {
     description: generateDescription(),
     dueDate,
-    // isRepeat: Boolean(getRandomInteger(0, 1)),
     repeating,
     color: getRandomColor(),
-    isArchive: Boolean(getRandomInteger(0, 1)),
-    isFavorite: Boolean(getRandomInteger(0, 1))
+    isArchive: getRandomBoolean(),
+    isFavorite: getRandomBoolean()
   };
 };
