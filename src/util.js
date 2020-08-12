@@ -28,7 +28,7 @@ export const isTaskExpired = (dueDate) => {
 
   const currentDate = getCurrentDate();
 
-  return currentDate.getTime() > dueDate.getTime();
+  return currentDate.getTime() > dueDate;
 };
 
 export const isTaskExpiringToday = (dueDate) => {
@@ -38,7 +38,7 @@ export const isTaskExpiringToday = (dueDate) => {
 
   const currentDate = getCurrentDate();
 
-  return currentDate.getTime() === dueDate.getTime();
+  return currentDate.getTime() === dueDate;
 };
 
 
