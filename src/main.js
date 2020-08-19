@@ -4,7 +4,7 @@ import {createFormEditTaskTemplate} from "./view/form-edit.js";
 import {createCardTaskTemplate} from "./view/card.js";
 
 import {createSortingTemplate} from "./view/sorting.js";
-import {renderHtmlElement} from "./util.js";
+import {renderHtmlElementTemplate} from "./util.js";
 import {createButtonLoadingTemplate} from "./view/button-load.js";
 import {generateTask} from "./mock/task.js";
 import {generateFilter} from "./mock/filter.js";
@@ -26,14 +26,14 @@ const renderBoardElement = () => {
   const boardElement = siteMainElement.querySelector(`.board`);
   const boardTasksElement = boardElement.querySelector(`.board__tasks`);
 
-  renderHtmlElement(boardElement, createButtonLoadingTemplate(), `beforeend`);
+  renderHtmlElementTemplate(boardElement, createButtonLoadingTemplate(), `beforeend`);
   const loadMoreButton = boardElement.querySelector(`.load-more`);
 
   const onLoadMoreButtonClick = (evt) => {
     evt.preventDefault();
     tasks
     .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
-    .forEach((task) => renderHtmlElement(boardTasksElement, createCardTaskTemplate(task), `beforeend`));
+    .forEach((task) => renderHtmlElementTemplate(boardTasksElement, createCardTaskTemplate(task), `beforeend`));
 
     renderedTaskCount += TASK_COUNT_PER_STEP;
 
@@ -42,10 +42,10 @@ const renderBoardElement = () => {
     }
   };
 
-  renderHtmlElement(boardTasksElement, createFormEditTaskTemplate(tasks[0]), `beforeend`);
+  renderHtmlElementTemplate(boardTasksElement, createFormEditTaskTemplate(tasks[0]), `beforeend`);
 
   for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i += 1) {
-    renderHtmlElement(boardTasksElement, createCardTaskTemplate(tasks[i]), `beforeend`);
+    renderHtmlElementTemplate(boardTasksElement, createCardTaskTemplate(tasks[i]), `beforeend`);
   }
   // renderHtmlElement(boardElement, createButtonLoadingTemplate(), `beforeend`);
 
@@ -55,7 +55,7 @@ const renderBoardElement = () => {
 
 };
 
-renderHtmlElement(siteMainControlElement, createSiteMenuTemplate(), `beforeend`); // beforeend вставляет последним дочерним элементом контейнера
-renderHtmlElement(siteMainElement, createFilterTemplate(filters), `beforeend`);
-renderHtmlElement(siteMainElement, createSortingTemplate(), `beforeend`);
+renderHtmlElementTemplate(siteMainControlElement, createSiteMenuTemplate(), `beforeend`); // beforeend вставляет последним дочерним элементом контейнера
+renderHtmlElementTemplate(siteMainElement, createFilterTemplate(filters), `beforeend`);
+renderHtmlElementTemplate(siteMainElement, createSortingTemplate(), `beforeend`);
 renderBoardElement();
