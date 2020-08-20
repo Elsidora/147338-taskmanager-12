@@ -33,6 +33,23 @@ const renderTask = (taskListElement, task) => {
   const taskComponent = new TaskView(task);
   const taskEditComponent = new TaskEditView(task);
 
+  const replaceCardToForm = () => {
+    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+  };
+
+  const replaceFormToCard = () => {
+    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+  };
+
+  taskComponent.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
+    replaceCardToForm();
+  });
+
+  taskEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    replaceFormToCard();
+  });
+
   renderHTMLElement(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
@@ -42,7 +59,7 @@ const onLoadMoreButtonClick = (evt) => {
   evt.preventDefault();
   tasks
     .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
-    .forEach((task) => renderTask(taskListComponent.getElement(), task);
+    .forEach((task) => renderTask(taskListComponent.getElement(), task));
 
   if (renderedTaskCount >= tasks.length) {
     loadMoreButtonComponent.getElement().remove();
