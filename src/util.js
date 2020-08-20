@@ -3,7 +3,7 @@ export const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
-export const renderElement = (container, element, place) => {
+export const renderHTMLElement = (container, element, place) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element); // prepend вставляет элемент в начало перед первым потомком родительского элементв

@@ -12,7 +12,7 @@ import TaskListView from "./view/task-list";
 
 import {generateTask} from "./mock/task";
 import {generateFilter} from "./mock/filter";
-import {renderTemplate, renderElement, RenderPosition} from "./util";
+import {renderHTMLElement, RenderPosition} from "./util";
 
 const TASK_COUNT = 22;
 const TASK_COUNT_PER_STEP = 8;
@@ -28,13 +28,21 @@ const siteMainControlElement = siteMainElement.querySelector(`.main__control`);
 const boardComponent = new BoardView();
 const taskListComponent = new TaskListView();
 const loadMoreButtonComponent = new ButtonLoadingView();
+
+const renderTask = (taskListElement, task) => {
+  const taskComponent = new TaskView(task);
+  const taskEditComponent = new TaskEditView(task);
+
+  renderHTMLElement(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
 let renderedTaskCount = TASK_COUNT_PER_STEP;
 
 const onLoadMoreButtonClick = (evt) => {
   evt.preventDefault();
   tasks
     .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
-    .forEach((task) => renderElement(taskListComponent.getElement(), new TaskView(task).getElement(), RenderPosition.BEFOREEND));
+    .forEach((task) => renderTask(taskListComponent.getElement(), task);
 
   if (renderedTaskCount >= tasks.length) {
     loadMoreButtonComponent.getElement().remove();
@@ -43,18 +51,18 @@ const onLoadMoreButtonClick = (evt) => {
   renderedTaskCount += TASK_COUNT_PER_STEP;
 };
 
-renderElement(siteMainControlElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND); // beforeend вставляет последним дочерним элементом контейнера
-renderElement(siteMainElement, new FilterView(filters).getElement(), RenderPosition.BEFOREEND);
-renderElement(siteMainElement, boardComponent.getElement(), RenderPosition.BEFOREEND);
-renderElement(boardComponent.getElement(), new SortingView().getElement(), RenderPosition.AFTERBEGIN);
-renderElement(boardComponent.getElement(), taskListComponent.getElement(), RenderPosition.BEFOREEND);
-renderElement(taskListComponent.getElement(), new TaskEditView(tasks[0]).getElement(), RenderPosition.BEFOREEND);
+renderHTMLElement(siteMainControlElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND); // beforeend вставляет последним дочерним элементом контейнера
+renderHTMLElement(siteMainElement, new FilterView(filters).getElement(), RenderPosition.BEFOREEND);
+renderHTMLElement(siteMainElement, boardComponent.getElement(), RenderPosition.BEFOREEND);
+renderHTMLElement(boardComponent.getElement(), new SortingView().getElement(), RenderPosition.AFTERBEGIN);
+renderHTMLElement(boardComponent.getElement(), taskListComponent.getElement(), RenderPosition.BEFOREEND);
 
-for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i += 1) {
-  renderElement(taskListComponent.getElement(), new TaskView(tasks[i]).getElement(), RenderPosition.BEFOREEND);
+
+for (let i = 0; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i += 1) {
+  renderTask(taskListComponent.getElement(), tasks[i]);
 }
 
-renderElement(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+renderHTMLElement(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 if (tasks.length > TASK_COUNT_PER_STEP) {
   loadMoreButtonComponent.getElement().addEventListener(`click`, onLoadMoreButtonClick);
 }
