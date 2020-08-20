@@ -26,38 +26,36 @@ const siteMainElement = document.querySelector(`.main`);
 const siteMainControlElement = siteMainElement.querySelector(`.main__control`);
 
 const boardComponent = new BoardView();
-renderElement(siteMainElement, boardComponent.getElement(), RenderPosition.BEFOREEND);
-renderElement(boardComponent.getElement(), new SortingView().getElement(), RenderPosition.AFTERBEGIN);
-
 const taskListComponent = new TaskListView();
-renderElement(boardComponent.getElement(), taskListComponent.getElement(), RenderPosition.BEFOREEND);
-renderTemplate(taskListComponent.getElement(), createFormEditTaskTemplate(tasks[0]), RenderPosition.BEFOREEND);
-
 const loadMoreButtonComponent = new ButtonLoadingView();
-renderElement(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
-
-for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i += 1) {
-  renderTemplate(taskListComponent.getElement(), createCardTaskTemplate(tasks[i]), `beforeend`);
-}
-
-if (tasks.length > TASK_COUNT_PER_STEP) {
-  loadMoreButtonComponent.getElement().addEventListener(`click`, onLoadMoreButtonClick);
-}
+let renderedTaskCount = TASK_COUNT_PER_STEP;
 
 const onLoadMoreButtonClick = (evt) => {
   evt.preventDefault();
-  let renderedTaskCount = TASK_COUNT_PER_STEP;
   tasks
     .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
     .forEach((task) => renderTemplate(taskListComponent.getElement(), createCardTaskTemplate(task), `beforeend`));
-
-  renderedTaskCount += TASK_COUNT_PER_STEP;
 
   if (renderedTaskCount >= tasks.length) {
     loadMoreButtonComponent.getElement().remove();
     loadMoreButtonComponent.removeElement();
   }
+  renderedTaskCount += TASK_COUNT_PER_STEP;
 };
 
 renderElement(siteMainControlElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND); // beforeend вставляет последним дочерним элементом контейнера
 renderElement(siteMainElement, new FilterView(filters).getElement(), RenderPosition.BEFOREEND);
+renderElement(siteMainElement, boardComponent.getElement(), RenderPosition.BEFOREEND);
+renderElement(boardComponent.getElement(), new SortingView().getElement(), RenderPosition.AFTERBEGIN);
+renderElement(boardComponent.getElement(), taskListComponent.getElement(), RenderPosition.BEFOREEND);
+renderTemplate(taskListComponent.getElement(), createFormEditTaskTemplate(tasks[0]), RenderPosition.BEFOREEND);
+
+for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i += 1) {
+  renderTemplate(taskListComponent.getElement(), createCardTaskTemplate(tasks[i]), `beforeend`);
+}
+
+renderElement(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+if (tasks.length > TASK_COUNT_PER_STEP) {
+  loadMoreButtonComponent.getElement().addEventListener(`click`, onLoadMoreButtonClick);
+}
+
