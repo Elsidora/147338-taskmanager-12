@@ -1,10 +1,10 @@
-import {createSiteMenuTemplate} from "./view/site-menu.js";
+import SiteMenuView from "./view/site-menu";
 import {createFilterTemplate} from "./view/filter.js";
 import {createFormEditTaskTemplate} from "./view/form-edit.js";
 import {createCardTaskTemplate} from "./view/card.js";
 
 import {createSortingTemplate} from "./view/sorting.js";
-import {renderHtmlElementTemplate} from "./util.js";
+import {renderHtmlElementTemplate, renderElement, RenderPosition} from "./util";
 import {createButtonLoadingTemplate} from "./view/button-load.js";
 import {generateTask} from "./mock/task.js";
 import {generateFilter} from "./mock/filter.js";
@@ -55,7 +55,7 @@ const renderBoardElement = () => {
 
 };
 
-renderHtmlElementTemplate(siteMainControlElement, createSiteMenuTemplate(), `beforeend`); // beforeend вставляет последним дочерним элементом контейнера
+renderElement(siteMainControlElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND); // beforeend вставляет последним дочерним элементом контейнера
 renderHtmlElementTemplate(siteMainElement, createFilterTemplate(filters), `beforeend`);
 renderHtmlElementTemplate(siteMainElement, createSortingTemplate(), `beforeend`);
 renderBoardElement();

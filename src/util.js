@@ -26,7 +26,9 @@ export const createElement = (template) => {
   const newElement = document.createElement(`div`); // 1
   newElement.innerHTML = template; // 2
 
-  return newElement.firstChild; // 3
+  return newElement.firstChild; // 3   Свойство Node.firstChild только для чтения, возвращающее
+  // первый потомок узла в древе или null, если узел является бездетным. Если узел это документ,
+  // он возвращает первый узел в списке своих прямых детей.
 };
 // Единственный нюанс, что HTML в строке должен иметь общую обёртку,
 // то есть быть чем-то вроде <nav><a>Link 1</a><a>Link 2</a></nav>,
