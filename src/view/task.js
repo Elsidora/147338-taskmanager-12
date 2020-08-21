@@ -3,7 +3,7 @@ import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from
 const createCardTaskTemplate = (task) => {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
 
-  const date = dueDate !== null
+  const cardDate = (dueDate)
     ? humanizeTaskDueDate(dueDate)
     : ``; // `numeric` - представление нумерации дней без нуля впереди, `long` - полное название месяца
 
@@ -56,7 +56,7 @@ const createCardTaskTemplate = (task) => {
             <div class="card__dates">
               <div class="card__date-deadline">
                 <p class="card__input-deadline-wrap">
-                  <span class="card__date">${date}</span>
+                  <span class="card__date">${cardDate}</span>
                 </p>
               </div>
             </div>
