@@ -12,7 +12,7 @@ import TaskListView from "./view/task-list";
 
 import {generateTask} from "./mock/task";
 import {generateFilter} from "./mock/filter";
-import {renderHTMLElement, RenderPosition} from "./util";
+import {renderHTMLElement, RenderPosition, closeElement} from "./util";
 
 const TASK_COUNT = 22;
 const TASK_COUNT_PER_STEP = 8;
@@ -41,14 +41,27 @@ const renderTask = (taskListElement, task) => {
     taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
   };
 
+  const closeFormEditTask = () => {
+    replaceFormToCard();
+    document.removeEventListener(`keydown`, onEscapePress);
+  };
+
+  const onEscapePress = (evt) => {
+    closeElement.isEscapeEvent(evt, closeFormEditTask);
+  }
+
   taskComponent.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
     replaceCardToForm();
+    document.addEventListener(`keydown`, onEscapePress);
   });
 
   taskEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
     evt.preventDefault();
     replaceFormToCard();
+    document.removeEventListener(`keydown`, onEscapePress);
   });
+
+  taskEditComponent.getElement().querySelector(`form`).addEventListener(`keydown`, onEscapePress);
 
   renderHTMLElement(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };

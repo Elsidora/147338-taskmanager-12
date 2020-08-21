@@ -81,3 +81,12 @@ export const isTaskRepeating = (repeating) => {
 export const humanizeTaskDueDate = (dueDate) => {
   return dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`});
 };
+
+export const closeElement = {
+  isEscapeEvent: (evt, action) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      action();
+    }
+  },
+};
