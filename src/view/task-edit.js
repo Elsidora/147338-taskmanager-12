@@ -1,5 +1,22 @@
-import {COLORS} from "../const.js";
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../util.js";
+import {COLORS} from "../const";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from "../util";
+
+const BLANK_TASK = {
+  color: COLORS[0],
+  description: ``,
+  dueDate: null,
+  repeating: {
+    mo: false,
+    tu: false,
+    we: false,
+    th: false,
+    fr: false,
+    sa: false,
+    su: false
+  },
+  isArchive: false,
+  isFavorite: false
+};
 
 const createTaskEditRepeatingTemplate = (repeating) => {
   return (`
@@ -60,21 +77,8 @@ const createTaskEditColorsTemplate = (currentColor) => {
   >`).join(``);
 };
 
-export const createFormEditTaskTemplate = (task = {}) => {
-  const {
-    color = `black`,
-    description = ``,
-    dueDate = null,
-    repeating = {
-      mo: false,
-      tu: false,
-      we: false,
-      th: false,
-      fr: false,
-      sa: false,
-      su: false
-    }
-  } = task; // данные для пустой формы
+const createFormEditTaskTemplate = (task = {}) => {
+  const {color, description, dueDate, repeating} = task;
 
   const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
@@ -132,3 +136,26 @@ export const createFormEditTaskTemplate = (task = {}) => {
   </article>`
   );
 };
+
+export default class TaskEdit {
+  constructor(task = BLANK_TASK) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFormEditTaskTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

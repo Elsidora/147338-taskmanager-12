@@ -1,61 +1,110 @@
-import {createSiteMenuTemplate} from "./view/site-menu.js";
-import {createFilterTemplate} from "./view/filter.js";
-import {createFormEditTaskTemplate} from "./view/form-edit.js";
-import {createCardTaskTemplate} from "./view/card.js";
+import SiteMenuView from "./view/site-menu";
+import FilterView from "./view/filter";
 
-import {createSortingTemplate} from "./view/sorting.js";
-import {renderHtmlElement} from "./util.js";
-import {createButtonLoadingTemplate} from "./view/button-load.js";
-import {generateTask} from "./mock/task.js";
-import {generateFilter} from "./mock/filter.js";
+import TaskEditView from "./view/task-edit";
+import TaskView from "./view/task";
+
+import SortingView from "./view/sorting";
+import ButtonLoadingView from "./view/button-load";
+
+import BoardView from "./view/board";
+import TaskListView from "./view/task-list";
+import NoTaskView from "./view/no-task";
+
+import {generateTask} from "./mock/task";
+import {generateFilter} from "./mock/filter";
+import {renderHTMLElement, RenderPosition, closeElement} from "./util";
 
 const TASK_COUNT = 22;
 const TASK_COUNT_PER_STEP = 8;
-
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask); // Метод fill() заполняет все элементы массива от начального до конечного индексов одним значением
 // (в данном случае - undefined). Метод map() создаёт новый массив с результатом вызова указанной функции для каждого элемента массива.
 
 const filters = generateFilter(tasks);
+
 const siteMainElement = document.querySelector(`.main`);
 const siteMainControlElement = siteMainElement.querySelector(`.main__control`);
 
+const renderTask = (taskListElement, task) => {
+  const taskComponent = new TaskView(task);
+  const taskEditComponent = new TaskEditView(task);
 
-const renderBoardElement = () => {
+  const replaceCardToForm = () => {
+    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+  };
+
+  const replaceFormToCard = () => {
+    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+  };
+
+  const closeFormEditTask = () => {
+    replaceFormToCard();
+    document.removeEventListener(`keydown`, onEscapePress);
+  };
+
+  const onEscapePress = (evt) => {
+    closeElement.isEscapeEvent(evt, closeFormEditTask);
+  }
+
+  taskComponent.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
+    replaceCardToForm();
+    document.addEventListener(`keydown`, onEscapePress);
+  });
+
+  taskEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    replaceFormToCard();
+    document.removeEventListener(`keydown`, onEscapePress);
+  });
+
+  taskEditComponent.getElement().querySelector(`form`).addEventListener(`keydown`, onEscapePress);
+
+  renderHTMLElement(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
+const renderBoard = (boardContainer, boardTasks) => {
+
+  const boardComponent = new BoardView();
+  const taskListComponent = new TaskListView();
+  const loadMoreButtonComponent = new ButtonLoadingView();
   let renderedTaskCount = TASK_COUNT_PER_STEP;
-  const boardElement = siteMainElement.querySelector(`.board`);
-  const boardTasksElement = boardElement.querySelector(`.board__tasks`);
-
-  renderHtmlElement(boardElement, createButtonLoadingTemplate(), `beforeend`);
-  const loadMoreButton = boardElement.querySelector(`.load-more`);
 
   const onLoadMoreButtonClick = (evt) => {
     evt.preventDefault();
-    tasks
-    .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
-    .forEach((task) => renderHtmlElement(boardTasksElement, createCardTaskTemplate(task), `beforeend`));
+
+    if (renderedTaskCount >= boardTasks.length) {
+      loadMoreButtonComponent.getElement().remove();
+      loadMoreButtonComponent.removeElement();
+    }
+    boardTasks
+      .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
+      .forEach((boardTask) => renderTask(taskListComponent.getElement(), boardTask));
 
     renderedTaskCount += TASK_COUNT_PER_STEP;
-
-    if (renderedTaskCount >= tasks.length) {
-      loadMoreButton.remove();
-    }
   };
 
-  renderHtmlElement(boardTasksElement, createFormEditTaskTemplate(tasks[0]), `beforeend`);
-
-  for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i += 1) {
-    renderHtmlElement(boardTasksElement, createCardTaskTemplate(tasks[i]), `beforeend`);
+  renderHTMLElement(boardContainer, boardComponent.getElement(), RenderPosition.BEFOREEND);
+  if (boardTasks.every((boardTask) => boardTask.isArchive)) {
+    renderHTMLElement(boardComponent.getElement(), new NoTaskView().getElement(), RenderPosition.AFTERBEGIN);
+    return;
   }
-  // renderHtmlElement(boardElement, createButtonLoadingTemplate(), `beforeend`);
-
-  if (tasks.length > TASK_COUNT_PER_STEP) {
-    loadMoreButton.addEventListener(`click`, onLoadMoreButtonClick);
+  renderHTMLElement(boardComponent.getElement(), new SortingView().getElement(), RenderPosition.AFTERBEGIN);
+  renderHTMLElement(boardComponent.getElement(), taskListComponent.getElement(), RenderPosition.BEFOREEND);
+  for (let i = 0; i < Math.min(boardTasks.length, TASK_COUNT_PER_STEP); i += 1) {
+    renderTask(taskListComponent.getElement(), boardTasks[i]);
   }
 
-};
+  renderHTMLElement(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+  if (boardTasks.length > TASK_COUNT_PER_STEP) {
+    loadMoreButtonComponent.getElement().addEventListener(`click`, onLoadMoreButtonClick);
+  }
+}
 
-renderHtmlElement(siteMainControlElement, createSiteMenuTemplate(), `beforeend`); // beforeend вставляет последним дочерним элементом контейнера
-renderHtmlElement(siteMainElement, createFilterTemplate(filters), `beforeend`);
-renderHtmlElement(siteMainElement, createSortingTemplate(), `beforeend`);
-renderBoardElement();
+renderHTMLElement(siteMainControlElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND); // beforeend вставляет последним дочерним элементом контейнера
+renderHTMLElement(siteMainElement, new FilterView(filters).getElement(), RenderPosition.BEFOREEND);
+
+renderBoard(siteMainElement, tasks);
+
+
+

@@ -1,9 +1,9 @@
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../util.js";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from "../util";
 
-export const createCardTaskTemplate = (task) => {
+const createCardTaskTemplate = (task) => {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
 
-  const date = dueDate !== null
+  const cardDate = (dueDate)
     ? humanizeTaskDueDate(dueDate)
     : ``; // `numeric` - представление нумерации дней без нуля впереди, `long` - полное название месяца
 
@@ -56,7 +56,7 @@ export const createCardTaskTemplate = (task) => {
             <div class="card__dates">
               <div class="card__date-deadline">
                 <p class="card__input-deadline-wrap">
-                  <span class="card__date">${date}</span>
+                  <span class="card__date">${cardDate}</span>
                 </p>
               </div>
             </div>
@@ -67,3 +67,27 @@ export const createCardTaskTemplate = (task) => {
   </article>`
   );
 };
+
+export default class Task {
+  constructor(task) {
+    this._task = task;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createCardTaskTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
