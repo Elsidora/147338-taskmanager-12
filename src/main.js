@@ -45,7 +45,7 @@ const renderTask = (taskListElement, task) => {
 
   const onEscapePress = (evt) => {
     closeElement.isEscapeEvent(evt, closeFormEditTask);
-  }
+  };
 
   taskComponent.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
     replaceCardToForm();
@@ -54,8 +54,7 @@ const renderTask = (taskListElement, task) => {
 
   taskEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-    replaceFormToCard();
-    document.removeEventListener(`keydown`, onEscapePress);
+    closeFormEditTask();
   });
 
   taskEditComponent.getElement().querySelector(`form`).addEventListener(`keydown`, onEscapePress);
@@ -99,7 +98,7 @@ const renderBoard = (boardContainer, boardTasks) => {
   if (boardTasks.length > TASK_COUNT_PER_STEP) {
     loadMoreButtonComponent.getElement().addEventListener(`click`, onLoadMoreButtonClick);
   }
-}
+};
 
 renderHTMLElement(siteMainControlElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND); // beforeend вставляет последним дочерним элементом контейнера
 renderHTMLElement(siteMainElement, new FilterView(filters).getElement(), RenderPosition.BEFOREEND);

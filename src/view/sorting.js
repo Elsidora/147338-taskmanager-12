@@ -10,7 +10,7 @@ const createSortingTemplate = () => {
   );
 };
 
-export default class SiteMenu {
+export default class Sorting {
   constructor() {
     this._element = null; // вызываем конструктор, в котором происходит инициализация приватного свойства _element со значением null
   }
