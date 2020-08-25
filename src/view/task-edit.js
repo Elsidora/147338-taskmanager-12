@@ -1,5 +1,6 @@
+import AbstractView from "./abstract";
 import {COLORS} from "../const";
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from "../util";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../util";
 
 const BLANK_TASK = {
   color: COLORS[0],
@@ -19,8 +20,7 @@ const BLANK_TASK = {
 };
 
 const createTaskEditRepeatingTemplate = (repeating) => {
-  return (`
-  <button class="card__repeat-toggle" type="button">
+  return (`<button class="card__repeat-toggle" type="button">
     repeat:<span class="card__repeat-status">${isTaskRepeating(repeating) ? `yes` : `no`}</span>
   </button>
   ${isTaskRepeating(repeating) ? `<fieldset class="card__repeat-days">
@@ -137,25 +137,13 @@ const createFormEditTaskTemplate = (task = {}) => {
   );
 };
 
-export default class TaskEdit {
+export default class TaskEdit extends AbstractView {
   constructor(task = BLANK_TASK) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createFormEditTaskTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
