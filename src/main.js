@@ -47,17 +47,16 @@ const renderTask = (taskListElement, task) => {
     closeElement.isEscapeEvent(evt, closeFormEditTask);
   };
 
-  taskComponent.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
+  taskComponent.setEditClickHandler(() => {
     replaceCardToForm();
     document.addEventListener(`keydown`, onEscapePress);
   });
 
-  taskEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
-    evt.preventDefault();
+  taskEditComponent.setFormSubmitHandler(() => {
     closeFormEditTask();
   });
 
-  taskEditComponent.getElement().querySelector(`form`).addEventListener(`keydown`, onEscapePress);
+  // taskEditComponent.getElement().querySelector(`form`).addEventListener(`keydown`, onEscapePress);
 
   renderHTMLElement(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };
@@ -96,7 +95,7 @@ const renderBoard = (boardContainer, boardTasks) => {
 
   renderHTMLElement(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
   if (boardTasks.length > TASK_COUNT_PER_STEP) {
-    loadMoreButtonComponent.getElement().addEventListener(`click`, onLoadMoreButtonClick);
+    loadMoreButtonComponent.setClickHandler(onLoadMoreButtonClick);
   }
 };
 
