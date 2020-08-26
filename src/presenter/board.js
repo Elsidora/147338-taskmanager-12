@@ -9,6 +9,7 @@ import TaskListView from "../view/task-list";
 import NoTaskView from "../view/no-task";
 import {renderHTMLElement, RenderPosition} from "../utils/render.js";
 
+const TASK_COUNT_PER_STEP = 8;
 
 export default class Board {
   constructor(boardContainer) {
@@ -24,6 +25,11 @@ export default class Board {
     this._boardTasks = boardTasks.slice();
     // Метод для инициализации (начала работы) модуля,
     // малая часть текущей функции renderBoard в main.js
+
+    renderHTMLElement(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
+    renderHTMLElement(this._boardComponent, this._taskListComponent, RenderPosition.BEFOREEND);
+
+    this._renderBoard();
   }
 
   _renderSort() {
@@ -35,7 +41,7 @@ export default class Board {
     // текущая функция renderTask в main.js
   }
 
-  _renderTasks() {
+  _renderTasks(from, to) {
     // Метод для рендеринга N-задач за раз
   }
 
@@ -51,5 +57,18 @@ export default class Board {
   _renderBoard() {
     // Метод для инициализации (начала работы) модуля,
     // бОльшая часть текущей функции renderBoard в main.js
+
+    if (this._boardTasks.every((task) => task.isArchive)) {
+      this._renderNoTasks();
+      return;
+    }
+
+    this._renderSort();
+
+    this._renderTasks(0, Math.min(this._boardTasks.length, TASK_COUNT_PER_STEP));
+
+    if (this._boardTasks.length > TASK_COUNT_PER_STEP) {
+      this._renderLoadMoreButton();
+    }
   }
 }
