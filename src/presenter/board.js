@@ -14,11 +14,14 @@ const TASK_COUNT_PER_STEP = 8;
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
-
+    this._renderedTaskCount = TASK_COUNT_PER_STEP;
     this._boardComponent = new BoardView();
     this._sortComponent = new SortingView();
     this._taskListComponent = new TaskListView();
     this._noTaskComponent = new NoTaskView();
+    this._loadMoreButtonComponent = new ButtonLoadingView();
+
+    this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
   }
 
   init(boardTasks) {
@@ -88,27 +91,29 @@ export default class Board {
     renderHTMLElement(this._boardComponent, this._noTaskComponent, RenderPosition.AFTERBEGIN);
   }
 
-  _renderLoadMoreButton() {
+  _handleLoadMoreButtonClick() {
+    this._renderTasks(this._renderedTaskCount, this._renderedTaskCount + TASK_COUNT_PER_STEP);
+    this._renderedTaskCount += TASK_COUNT_PER_STEP;
     // Метод, куда уйдёт логика по отрисовке компонетов задачи,
     // текущая функция renderTask в main.js
 
-    let renderedTaskCount = TASK_COUNT_PER_STEP;
+    if (this._renderedTaskCount >= this._boardTasks.length) {
+      remove(this._loadMoreButtonComponent);
+    }
+  }
 
-    const loadMoreButtonComponent = new ButtonLoadingView();
+  _renderLoadMoreButton() {
+    renderHTMLElement(this._boardComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
+    this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreButtonClick);
+  }
 
-    renderHTMLElement(this._boardComponent, loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    loadMoreButtonComponent.setClickHandler(() => {
-      this._boardTasks
-        .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
-        .forEach((boardTask) => this._renderTask(boardTask));
+  _renderTaskList() {
+    this._renderTasks(0, Math.min(this._boardTasks.length, TASK_COUNT_PER_STEP));
 
-      renderedTaskCount += TASK_COUNT_PER_STEP;
-
-      if (renderedTaskCount >= this._boardTasks.length) {
-        remove(loadMoreButtonComponent);
-      }
-    });
+    if (this._boardTasks.length > TASK_COUNT_PER_STEP) {
+      this._renderLoadMoreButton();
+    }
   }
 
   _renderBoard() {
@@ -122,10 +127,6 @@ export default class Board {
 
     this._renderSort();
 
-    this._renderTasks(0, Math.min(this._boardTasks.length, TASK_COUNT_PER_STEP));
-
-    if (this._boardTasks.length > TASK_COUNT_PER_STEP) {
-      this._renderLoadMoreButton();
-    }
+    this._renderTaskList();
   }
 }
