@@ -1,5 +1,5 @@
 import AbstractView from "./abstract";
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../util";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils/task";
 
 const createCardTaskTemplate = (task) => {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
