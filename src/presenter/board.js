@@ -77,6 +77,8 @@ export default class Board {
     }
 
     this._sortTasks(sortType);
+    this._clearTaskList();
+    this._renderTaskList();
   }
 
   _renderSort() {
@@ -152,6 +154,10 @@ export default class Board {
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreButtonClick);
   }
 
+  _clearTaskList() {
+    this._taskListComponent.getElement().innerHTML = ``;
+    this._renderedTaskCount = TASK_COUNT_PER_STEP;
+  }
 
   _renderTaskList() {
     this._renderTasks(0, Math.min(this._boardTasks.length, TASK_COUNT_PER_STEP));
