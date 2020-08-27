@@ -8,6 +8,8 @@ import BoardView from "../view/board";
 import TaskListView from "../view/task-list";
 import NoTaskView from "../view/no-task";
 import {renderHTMLElement, RenderPosition, replace, remove, closeElement} from "../utils/render.js";
+import {sortTaskUp, sortTaskDown} from "../utils/task";
+import {SortType} from "../const";
 
 const TASK_COUNT_PER_STEP = 8;
 
@@ -15,6 +17,8 @@ export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._renderedTaskCount = TASK_COUNT_PER_STEP;
+    this._currentSortType = SortType.DEFAULT;
+
     this._boardComponent = new BoardView();
     this._sortComponent = new SortingView();
     this._taskListComponent = new TaskListView();
@@ -30,16 +34,49 @@ export default class Board {
     // Метод для инициализации (начала работы) модуля,
     // малая часть текущей функции renderBoard в main.js
 
+    // 1. В отличии от сортировки по любому параметру,
+    // исходный порядок можно сохранить только одним способом -
+    // сохранив исходный массив:
+    this._sourcedBoardTasks = boardTasks.slice();
+
     renderHTMLElement(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
     renderHTMLElement(this._boardComponent, this._taskListComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
   }
 
+  _sortTasks(sortType) {
+    // 2. Этот исходный массив задач необходим,
+    // потому что для сортировки мы будем мутировать
+    // массив в свойстве _boardTasks
+
+    switch (sortType) {
+      case SortType.DATE_UP:
+        this._boardTasks.sort(sortTaskUp);
+        break;
+      case SortType.DATE_DOWN:
+        this._boardTasks.sort(sortTaskDown);
+        break;
+      default:
+        // 3. А когда пользователь захочет "вернуть всё, как было",
+        // мы просто запишем в _boardTasks исходный массив
+        this._boardTasks = this._sourcedBoardTasks.slice();
+    }
+
+    this._currentSortType = sortType;
+
+  }
+
   _handleSortTypeChange(sortType) {
     // - Сортируем задачи
     // - Очищаем список
     // - Рендерим список заново
+
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortTasks(sortType);
   }
 
   _renderSort() {
