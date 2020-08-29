@@ -4,3 +4,9 @@ export const DESCRIPTIONS = [
   `Сделать домашку`,
   `Завершить успешно проект`
 ];
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE_DOWN: `date-down`,
+  DATE_UP: `date-up`
+};
