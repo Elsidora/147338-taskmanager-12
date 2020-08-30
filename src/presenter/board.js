@@ -1,5 +1,4 @@
-import TaskEditView from "../view/task-edit";
-import TaskView from "../view/task";
+import TaskPresenter from "./task.js";
 
 import SortingView from "../view/sorting";
 import ButtonLoadingView from "../view/button-load";
@@ -7,7 +6,7 @@ import ButtonLoadingView from "../view/button-load";
 import BoardView from "../view/board";
 import TaskListView from "../view/task-list";
 import NoTaskView from "../view/no-task";
-import {renderHTMLElement, RenderPosition, replace, remove, closeElement} from "../utils/render.js";
+import {renderHTMLElement, RenderPosition, remove} from "../utils/render.js";
 import {sortTaskUp, sortTaskDown} from "../utils/task";
 import {SortType} from "../const";
 
@@ -92,36 +91,8 @@ export default class Board {
     // Метод, куда уйдёт логика по созданию и рендерингу компонетов задачи,
     // текущая функция renderTask в main.js
 
-    const taskComponent = new TaskView(task);
-    const taskEditComponent = new TaskEditView(task);
-
-    const replaceCardToForm = () => {
-      replace(taskEditComponent, taskComponent);
-    };
-
-    const replaceFormToCard = () => {
-      replace(taskComponent, taskEditComponent);
-    };
-
-    const closeFormEditTask = () => {
-      replaceFormToCard();
-      document.removeEventListener(`keydown`, onEscapePress);
-    };
-
-    const onEscapePress = (evt) => {
-      closeElement.isEscapeEvent(evt, closeFormEditTask);
-    };
-
-    taskComponent.setEditClickHandler(() => {
-      replaceCardToForm();
-      document.addEventListener(`keydown`, onEscapePress);
-    });
-
-    taskEditComponent.setFormSubmitHandler(() => {
-      closeFormEditTask();
-    });
-
-    renderHTMLElement(this._taskListComponent, taskComponent, RenderPosition.BEFOREEND);
+    const taskPresenter = new TaskPresenter(this._taskListComponent);
+    taskPresenter.init(task);
   }
 
   _renderTasks(from, to) {
