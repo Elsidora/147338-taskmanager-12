@@ -1,6 +1,6 @@
 import TaskView from "../view/task";
 import TaskEditView from "../view/task-edit";
-import {renderHTMLElement, RenderPosition, replace, closeElement} from "../utils/render";
+import {renderHTMLElement, RenderPosition, replace, remove, closeElement} from "../utils/render";
 
 export default class Task {
   constructor(taskListContainer) {
@@ -18,13 +18,44 @@ export default class Task {
   init(task) {
     this._task = task;
 
+    // переменные для запоминания предыдущих компонентов
+    const prevTaskComponent = this._taskComponent;
+    const prevTaskEditComponent = this._taskEditComponent;
+
     this._taskComponent = new TaskView(task);
     this._taskEditComponent = new TaskEditView(task);
 
     this._taskComponent.setEditClickHandler(this._handleEditClick);
     this._taskEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
+    // Добавим возможность повторно инициализировать презентер задачи.
+    // Для этого в методе init будем запоминать предыдущие компоненты.
+    // Если они null, то есть не создавались, рендерим как раньше.
+    // Если они отличны от null, то есть создавались, то заменяем их новыми и удаляем
+    if (prevTaskComponent === null || prevTaskEditComponent === null) {
+      renderHTMLElement(this._taskListContainer, this._taskComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    // Проверка на наличие в DOM необходима,
+    // чтобы не пытаться заменить то, что не было отрисовано
+    if (this._taskListContainer.getElement().contains(prevTaskComponent.getElement())) {
+      replace(this._taskComponent, prevTaskComponent);
+    }
+
+    if (this._taskListContainer.getElement().contains(prevTaskEditComponent.getElement())) {
+      replace(this._taskEditComponent, prevTaskEditComponent);
+    }
+
+    remove(prevTaskComponent);
+    remove(prevTaskEditComponent);
+
     renderHTMLElement(this._taskListContainer, this._taskComponent, RenderPosition.BEFOREEND);
+  }
+
+  destroy() {
+    remove(this._taskComponent);
+    remove(this._taskEditComponent);
   }
 
   _replaceCardToForm() {
