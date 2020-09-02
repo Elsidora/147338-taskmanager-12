@@ -1,6 +1,6 @@
 const getCurrentDate = () => {
   const currentDate = new Date();
-  currentDate.setHours(23, 59, 59, 999);
+  // currentDate.setHours(23, 59, 59, 999);
 
   return currentDate;
 };
@@ -30,6 +30,7 @@ export const isTaskRepeating = (repeating) => {
 };
 
 export const humanizeTaskDueDate = (dueDate) => {
+  console.log(dueDate);
   return dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`});
 };
 
