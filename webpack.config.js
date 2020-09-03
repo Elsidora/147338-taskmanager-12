@@ -16,9 +16,19 @@ module.exports = {
     port: 3003,
     hot: isDev,
   },
+
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),
   ],
+
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  }
 };
