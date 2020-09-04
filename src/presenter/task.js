@@ -92,8 +92,8 @@ export default class Task {
   }
 
   _escKeyDownHandler(evt) {
-    closeElement.isEscapeEvent(evt, this._closeFormEditTask);
     this._taskEditComponent.reset(this._task);
+    closeElement.isEscapeEvent(evt, this._closeFormEditTask);
   }
 
 

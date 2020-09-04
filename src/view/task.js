@@ -1,13 +1,11 @@
 import AbstractView from "./abstract";
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils/task";
+import {isTaskExpired, isTaskRepeating, formatTaskDueDate} from "../utils/task";
 
 const createCardTaskTemplate = (task) => {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
 
-  const cardDate = (dueDate)
-    ? humanizeTaskDueDate(dueDate)
-    : ``; // `numeric` - представление нумерации дней без нуля впереди, `long` - полное название месяца
-
+  const cardDate = formatTaskDueDate(dueDate); // `numeric` - представление нумерации дней без нуля впереди, `long` - полное название месяца
+  console.log(cardDate);
   const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
     : ``;
