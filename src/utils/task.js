@@ -1,4 +1,6 @@
-const getCurrentDate = () => {
+import moment from "moment";
+
+export const getCurrentDate = () => {
   const currentDate = new Date();
   currentDate.setHours(23, 59, 59, 999);
 
@@ -12,7 +14,7 @@ export const isTaskExpired = (dueDate) => {
 
   const currentDate = getCurrentDate();
 
-  return currentDate > dueDate;
+  return moment(currentDate).isAfter(dueDate, `day`);
 };
 
 export const isTaskExpiringToday = (dueDate) => {
@@ -22,16 +24,24 @@ export const isTaskExpiringToday = (dueDate) => {
 
   const currentDate = getCurrentDate();
 
-  return currentDate === dueDate;
+  return moment(dueDate).isSame(currentDate, `day`);
 };
 
 export const isTaskRepeating = (repeating) => {
   return Object.values(repeating).some(Boolean);
 };
 
-export const humanizeTaskDueDate = (dueDate) => {
-  return dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`});
-};
+/*
+const getCurrentDate = () => new Date();
+*/
+
+export const formatTaskDueDate = (dueDate) => {
+  if (!(dueDate instanceof Date)) {
+    return ``;
+  }
+
+  return moment(dueDate).format(`D MMMM`);
+}
 
 // Функция помещает задачи без даты в конце списка,
 // возвращая нужный вес для колбэка sort

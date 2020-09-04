@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MomentLocalesPlugin = require(`moment-locales-webpack-plugin`);
 
 const isProd = process.env.NODE_ENV === 'production';
 const isDev = !isProd;
@@ -16,9 +17,21 @@ module.exports = {
     port: 3003,
     hot: isDev,
   },
+
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  },
+
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),
-  ],
+    new MomentLocalesPlugin(),
+  ]
+
 };
