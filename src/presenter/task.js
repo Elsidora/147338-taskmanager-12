@@ -59,8 +59,6 @@ export default class Task {
 
     remove(prevTaskComponent);
     remove(prevTaskEditComponent);
-
-    renderHTMLElement(this._taskListContainer, this._taskComponent, RenderPosition.BEFOREEND);
   }
 
   destroy() {
